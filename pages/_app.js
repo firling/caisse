@@ -4,8 +4,6 @@ import { SessionProvider } from "next-auth/react"
 import Head from 'next/head'
 import Navbar from '@/components/layout/Navbar'
 import Topbar from '@/components/layout/Topbar'
-import { getServerSession } from "next-auth";
-import { authOptions } from './api/auth/[...nextauth]'
 
 export default function App({ Component, pageProps: { session, ...pageProps}, ...appProps }) {
   const noLayout = ['/auth/signin'];
@@ -60,14 +58,4 @@ export default function App({ Component, pageProps: { session, ...pageProps}, ..
       </MantineProvider>
     </SessionProvider>
   )
-}
-
-export async function getServerSideProps({ req, res }) {
-	const session = await getServerSession(req, res, authOptions)
-
-	console.log(session)
-
-	return {
-		props: { session }
-	}
 }
