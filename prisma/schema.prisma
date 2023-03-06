@@ -11,20 +11,23 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   @@unique([provider, providerAccountId])
 }
@@ -34,18 +37,28 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   password      String?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  restos        UserResto[]
+  referrers     Invitation[] @relation("referrer")
+  refereds      Invitation[] @relation("referred")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model VerificationToken {
@@ -53,5 +66,83 @@ model VerificationToken {
   token      String   @unique
   expires    DateTime
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
   @@unique([identifier, token])
+}
+
+model Invitation {
+  id         String @id @default(cuid())
+  status     String
+  referrerId String
+  referredId String
+  restoId    String
+  
+  referrer   User   @relation("referrer", fields: [referrerId], references: [id])
+  referred   User   @relation("referred", fields: [referredId], references: [id])
+  resto      Resto  @relation(fields: [restoId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model Resto {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  users       UserResto[]
+  categories  Category[]
+  dishes      Dish[]
+  invitations Invitation[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model UserResto {
+  userId  String
+  restoId String
+  role    role
+
+  user  User  @relation(fields: [userId], references: [id])
+  resto Resto @relation(fields: [restoId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@id([userId, restoId])
+}
+
+model Category {
+  id      String  @id @default(cuid())
+  name    String
+  image   String?
+  restoId String
+  dishes  Dish[]
+
+  resto Resto @relation(fields: [restoId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model Dish {
+  id         String  @id @default(cuid())
+  name       String
+  image      String?
+  restoId    String
+  categoryId String
+
+  resto    Resto    @relation(fields: [restoId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+enum role {
+  waiter
+  chef
+  admin
+  superAdmin
 }
