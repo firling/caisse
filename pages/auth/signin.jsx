@@ -10,8 +10,8 @@ export default function login() {
 
     const form = useForm({
       initialValues: {
-        email: '',
-        password: ''
+        email: 'test@test.com',
+        password: 'test'
       },
   
       validate: {
@@ -39,7 +39,7 @@ export default function login() {
                 },
             });
         }
-    }, [])
+    }, [status])
 
     return (
         <section className="gradient-form h-screen bg-slate-100">

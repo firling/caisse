@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import prisma from "../../../lib/prisma"
 
-export default NextAuth({
+export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -42,9 +42,43 @@ export default NextAuth({
         }
         // Return null if user data could not be retrieved
         return null
-      }
+      },
     })
   ],
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (!session) return;
+
+      const userData = await prisma.user.findUnique({
+        where: {
+          email: session.user.email,
+        }
+      });
+
+      let selectedResto = null;
+
+      if (userData.selectedRestoId) {
+        selectedResto = await prisma.resto.findUnique({
+          where: {
+            id: userData.selectedRestoId,
+          },
+          select: {
+            id: true, name: true
+          }
+        });
+      }
+
+      return {
+        user: {
+          id: userData.id,
+          name: userData.name,
+          email: userData.email,
+          image: userData.image,
+          selectedResto,
+        }
+      }  
+    },
+  },
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
@@ -53,4 +87,6 @@ export default NextAuth({
     strategy: "jwt", 
     maxAge: 60 * 24 * 60 * 60 
   },
-})
+}
+
+export default NextAuth(authOptions)

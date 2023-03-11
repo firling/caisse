@@ -45,17 +45,20 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(cuid())
-  name          String?
-  email         String?      @unique
-  emailVerified DateTime?
-  password      String?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  restos        UserResto[]
-  referrers     Invitation[] @relation("referrer")
-  refereds      Invitation[] @relation("referred")
+  id              String       @id @default(cuid())
+  name            String?
+  email           String?      @unique
+  emailVerified   DateTime?
+  password        String?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  restos          UserResto[]
+  referrers       Invitation[] @relation("referrer")
+  refereds        Invitation[] @relation("referred")
+  selectedRestoId String?
+
+  selectedResto Resto? @relation(fields: [selectedRestoId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
@@ -78,22 +81,23 @@ model Invitation {
   referrerId String
   referredId String
   restoId    String
-  
-  referrer   User   @relation("referrer", fields: [referrerId], references: [id])
-  referred   User   @relation("referred", fields: [referredId], references: [id])
-  resto      Resto  @relation(fields: [restoId], references: [id])
+
+  referrer User  @relation("referrer", fields: [referrerId], references: [id])
+  referred User  @relation("referred", fields: [referredId], references: [id])
+  resto    Resto @relation(fields: [restoId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 }
 
 model Resto {
-  id          String       @id @default(cuid())
-  name        String       @unique
-  users       UserResto[]
-  categories  Category[]
-  dishes      Dish[]
-  invitations Invitation[]
+  id            String       @id @default(cuid())
+  name          String       @unique
+  users         UserResto[]
+  categories    Category[]
+  dishes        Dish[]
+  invitations   Invitation[]
+  selectedUsers User[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt

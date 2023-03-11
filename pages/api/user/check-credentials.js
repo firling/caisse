@@ -29,6 +29,7 @@ async function handlePOST(res, req) {
       email: true,
       image: true,
       password: true,
+      selectedRestoId: true,
     },
   });
   if (user && await isSamePass(req.body.password, user.password)) {

@@ -5,7 +5,7 @@ import Head from 'next/head'
 import Navbar from '@/components/layout/Navbar'
 import Topbar from '@/components/layout/Topbar'
 
-export default function App({ Component, pageProps: { session, ...pageProps}, ...appProps }) {
+export default function App({ Component, pageProps: {session, ...pageProps}, ...appProps }) {
   const noLayout = ['/auth/signin'];
 
   if (noLayout.includes(appProps.router.pathname)){
@@ -50,8 +50,8 @@ export default function App({ Component, pageProps: { session, ...pageProps}, ..
           colorScheme: 'light',
         }}
       >
-        <div className="w-full h-screen bg-slate-100">
-          <Topbar />
+        <div className="flex flex-col w-full h-screen bg-slate-100">
+          <Topbar title={pageProps.user?.selectedResto ? pageProps.user?.selectedResto.name : "Caisse"}/>
           <Component {...pageProps} />
           <Navbar />
         </div>
