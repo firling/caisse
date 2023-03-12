@@ -1,4 +1,4 @@
-import { IconCategory, IconGift, IconHome, IconSearch, IconUser } from "@tabler/icons-react";
+import { IconBasket, IconHome, IconNotes, IconUser } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -13,18 +13,13 @@ export default function Navbar() {
 		},
 		{
 			link: "#",
-			label: "Category",
-			Icon: IconCategory,
+			label: "Panier",
+			Icon: IconBasket,
 		},
 		{
 			link: "#",
-			label: "Search",
-			Icon: IconSearch,
-		},
-		{
-			link: "#",
-			label: "Gift",
-			Icon: IconGift,
+			label: "Commande",
+			Icon: IconNotes,
 		},
 		{
 			link: "/profil",

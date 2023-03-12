@@ -120,7 +120,9 @@ model UserResto {
 model Category {
   id      String  @id @default(cuid())
   name    String
+  type    String
   image   String?
+  color   String?
   restoId String
   dishes  Dish[]
 
