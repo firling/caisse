@@ -69,15 +69,15 @@ export default function CreateCategoryModal({opened, onClose, restoId, colorVari
                             fw={500}
                         >Couleur de la catégorie <span className='text-red-500'>*</span></Text>
                         {buttons}
-
-                        <Group position="right" mt="md">
-                            <Button 
-                                type='submit'
-                                variant="outline"
-                                color="blue"
-                            >Créer</Button>
-                        </Group>
                     </div>
+
+                    <Group position="right" mt="md">
+                        <Button 
+                            type='submit'
+                            variant="outline"
+                            color="blue"
+                        >Créer</Button>
+                    </Group>
                 </form>
             </div> 
         </Modal>

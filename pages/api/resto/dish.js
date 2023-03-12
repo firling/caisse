@@ -14,12 +14,11 @@ export default async function handle(req, res) {
 async function handlePOST(res, req) {
     const {data} = req.body
 
-    const category = await prisma.category.create({
+    const dish = await prisma.dish.create({
         data: {
             ...data,
-            type: "color"
         }
     })
 
-    res.json(category);
+    res.json(dish);
 }

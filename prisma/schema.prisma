@@ -135,7 +135,7 @@ model Category {
 model Dish {
   id         String  @id @default(cuid())
   name       String
-  image      String?
+  image      String? @db.Text
   restoId    String
   categoryId String
 
