@@ -4,7 +4,7 @@ import { useForm } from '@mantine/form';
 import { useRouter } from "next/router";
 
 
-export default function login() {
+export default function Login() {
     const { status } = useSession();
     const router = useRouter();
 

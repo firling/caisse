@@ -10,8 +10,13 @@ import { useState } from 'react'
 import colorVariants from '../utils/colors';
 
 export default function Home({user, categories}) {
+  const [createModalOpened, setCreateModalOpened] = useState(false);
+  
+  const [createCatOpened, setCreateCatOpened] = useState(false);
+
+  const router = useRouter()
+
   if (!user?.selectedResto) {
-    const [createModalOpened, setCreateModalOpened] = useState(false);
     return (
       <div className='container m-auto text-center'>
         <p>Vous n'avez pas encore configuré de restaurant.</p>
@@ -34,10 +39,6 @@ export default function Home({user, categories}) {
       </div>
     )
   }
-  
-  const [createCatOpened, setCreateCatOpened] = useState(false);
-
-  const router = useRouter()
 
   const cards = categories.map((elt, i) => (
     <a 
