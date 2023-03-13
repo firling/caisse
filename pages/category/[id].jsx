@@ -1,6 +1,8 @@
 import CreateDishModal from '@/components/modal/CreateDishModal';
 import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth'
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { useState } from 'react';
 
@@ -8,6 +10,7 @@ import colorVariants from '../../utils/colors';
 
 export default function Category({user, category, dishes}) {
     const [dishOpened, setDishOpened] = useState(false);
+    const router = useRouter()
 
     const cards = dishes.map((elt, i) => (
         <div 
@@ -15,12 +18,13 @@ export default function Category({user, category, dishes}) {
             className="flex flex-wrap justify-center gap-2"
         >
             <a 
-                className={`flex items-center justify-center w-44 h-32 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100`}
-                style={{
-                    background: `center / cover no-repeat url("${elt.image}")`,
-                }}
+                className={`flex items-center justify-center w-44 h-32 max-w-sm bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 overflow-hidden`}
+                onClick={() => router.push(`/dish/${elt.id}`)}
             >
-                <h6 className={`text-xl font-bold tracking-tight ${elt.image ? "text-white" : "text-gray-900"}`}>{elt.name}</h6>
+                {elt.image && 
+                    <Image className='opacity-30' alt="dish image" src={elt.image} width="200" height="200"/>
+                }
+                <h6 className={`text-xl font-medium tracking-tight text-gray-900 absolute`}>{elt.name}</h6>
             </a>
         </div>
     ))

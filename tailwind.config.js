@@ -9,6 +9,9 @@ module.exports = {
     {
       pattern: /bg-(gray|sky|red|orange|yellow|lime|green|indigo|fuchsia)-(300|400|500)\/30/,
     },
+    {
+      pattern: /border-(gray|sky|red|orange|yellow|lime|green|indigo|fuchsia)-(300|400|500)/,
+    },
   ],
   theme: {
     extend: {},

@@ -12,7 +12,7 @@ export default function Navbar() {
 			Icon: IconHome,
 		},
 		{
-			link: "#",
+			link: "/panier",
 			label: "Panier",
 			Icon: IconBasket,
 		},

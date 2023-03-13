@@ -56,6 +56,7 @@ model User {
   restos          UserResto[]
   referrers       Invitation[] @relation("referrer")
   refereds        Invitation[] @relation("referred")
+  Panier          Panier[]
   selectedRestoId String?
 
   selectedResto Resto? @relation(fields: [selectedRestoId], references: [id])
@@ -133,17 +134,41 @@ model Category {
 }
 
 model Dish {
-  id         String  @id @default(cuid())
-  name       String
-  image      String? @db.Text
-  restoId    String
-  categoryId String
+  id          String        @id @default(cuid())
+  name        String
+  price       Float
+  image       String?       @db.Text
+  description String?       @db.Text
+  restoId     String
+  categoryId  String
+  LignePanier LignePanier[]
 
   resto    Resto    @relation(fields: [restoId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
+}
+
+model Panier {
+  id          String        @id @default(cuid())
+  active      Boolean
+  userId      String
+  LignePanier LignePanier[]
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model LignePanier {
+  id           String  @id @default(cuid())
+  quantity     Int
+  total        Float
+  informations String? @db.Text
+  dishId       String
+  panierId     String
+
+  dish   Dish   @relation(fields: [dishId], references: [id])
+  panier Panier @relation(fields: [panierId], references: [id])
 }
 
 enum role {
