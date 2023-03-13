@@ -1,3 +1,4 @@
+import LignePanier from '@/components/LignePanier';
 import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth'
 import Image from 'next/image';
@@ -15,31 +16,9 @@ export default function Panier({user, lignePanier}) {
         <div className="relative container mx-auto pb-36">
             
             <div className='p-4 bg-white'>
-                <ul className="max-w-md mx-auto divide-y divide-gray-200 dark:divide-gray-700">
+                <ul className="max-w-md mx-auto divide-y divide-gray-200">
                     {lignePanier.map((elt, i) => (
-                        <li key={i} className="py-2">
-                            <div className="flex items-center space-x-4">
-                                <div className="flex-shrink-0">
-                                    <Image 
-                                        className="w-8 h-8 rounded-full"
-                                        height={200}
-                                        width={200}
-                                        src={elt.dish.image}
-                                    />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                        {elt.dish.name}
-                                    </p>
-                                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                        quantité : {elt.quantity}
-                                    </p>
-                                </div>
-                                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    {elt.total.toFixed(2)}€
-                                </div>
-                            </div>
-                        </li>
+                        <LignePanier key={i} elt={elt}/>
                     ))}
                 </ul>
             </div>

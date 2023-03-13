@@ -1,21 +1,29 @@
 import CreateCategoryModal from '@/components/modal/CreateCategoryModal';
 import NoResto from '@/components/NoResto';
-import prisma from '@/lib/prisma';
-import { getServerSession } from 'next-auth'
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import colorVariants from '../utils/colors';
 
-export default function Home({user, categories}) {
+export default function Home() {
+  const { data: session, status } = useSession()
   
   const [createCatOpened, setCreateCatOpened] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const router = useRouter()
 
-  if (!user?.selectedResto) {
-    return <NoResto user={user} />
+  useEffect(() => {
+    if (session?.user?.selectedResto) {
+      fetch(`/api/resto/category?restoId=${session.user.selectedResto.id}`)
+        .then(res => res.json())
+        .then(setCategories)
+    }
+  }, [status])
+
+  if (!session?.user?.selectedResto) {
+    return <NoResto user={session?.user} />
   }
 
   const cards = categories.map((elt, i) => (
@@ -40,7 +48,7 @@ export default function Home({user, categories}) {
       <CreateCategoryModal 
           opened={createCatOpened} 
           onClose={() => setCreateCatOpened(false)} refresh={() => console.log("refresh")} 
-          restoId={user?.selectedResto?.id}
+          restoId={session.user?.selectedResto?.id}
           colorVariants={colorVariants}
       />
     </div>
@@ -48,27 +56,29 @@ export default function Home({user, categories}) {
 }
 
 
-export const getServerSideProps = async (ctx) => {
-  const session = await getServerSession(ctx.req, ctx.res, authOptions)
+// export const getServerSideProps = async (ctx) => {
+//   const session = await getServerSession(ctx.req, ctx.res, authOptions)
 
-  var categories = []
+//   var categories = []
 
-  if (session.user?.selectedResto) {
-    categories = await prisma.category.findMany({
-      where: {restoId: session.user?.selectedResto.id},
-      select: {
-        id: true,
-        name: true,
-        color: true,
-        type: true
-      }
-    })
-  }
+//   if (session.user?.selectedResto) {
+//     categories = await prisma.category.findMany({
+//       where: {restoId: session.user?.selectedResto.id},
+//       select: {
+//         id: true,
+//         name: true,
+//         color: true,
+//         type: true
+//       }
+//     })
+//   }
 
-  return { 
-    props: {
-      user: session.user,
-      categories,
-    }
-  }
-}
+//   const data = await fetch(`${process.env.NEXTAUTH_URL}/api/resto/category`).then(res => res.json())
+
+//   return { 
+//     props: {
+//       user: session.user,
+//       categories,
+//     }
+//   }
+// }

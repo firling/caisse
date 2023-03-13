@@ -1,8 +1,12 @@
 import prisma from "../../../lib/prisma";
+import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { getServerSession } from "next-auth/next"
 
 export default async function handle(req, res) {
   if (req.method === "POST") {
-    await handlePOST(res, req);
+    await handlePOST(req, res);
+  } else if (req.method === "GET") {
+    await handleGET(req, res);
   } else {
     throw new Error(
       `The HTTP ${req.method} method is not supported at this route.`,
@@ -10,16 +14,31 @@ export default async function handle(req, res) {
   }
 }
 
-// POST /api/user
-async function handlePOST(res, req) {
-    const {data} = req.body
+async function handleGET(req, res) {
+  const { restoId } = req.query
 
-    const category = await prisma.category.create({
-        data: {
-            ...data,
-            type: "color"
-        }
-    })
+  const categories = await prisma.category.findMany({
+    where: {restoId},
+    select: {
+      id: true,
+      name: true,
+      color: true,
+      type: true
+    }
+  })
 
-    res.json(category);
+  res.json(categories)
+}
+
+async function handlePOST(req, res) {
+  const {data} = req.body
+
+  const category = await prisma.category.create({
+      data: {
+          ...data,
+          type: "color"
+      }
+  })
+
+  res.json(category);
 }

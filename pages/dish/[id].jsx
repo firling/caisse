@@ -2,13 +2,14 @@ import prisma from '@/lib/prisma';
 import { Textarea } from '@mantine/core';
 import { useCounter } from '@mantine/hooks';
 import { getServerSession } from 'next-auth'
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { useState } from 'react';
 
 export default function Dish({user, dish}) {
     const router = useRouter();
     const [count, handlers] = useCounter(1, { min: 1 });
+    const [informations, setInformations] = useState("");
 
     const addToPanier = () => {
         fetch('/api/panier/', {
@@ -20,6 +21,7 @@ export default function Dish({user, dish}) {
                     dishId: dish.id,
                     quantity: count,
                     dishPrice: dish.price,
+                    informations: informations.replaceAll('\n', '\\n'),
                 }
             }),
      
@@ -80,6 +82,8 @@ export default function Dish({user, dish}) {
                     placeholder='Supplément ... Sans ...'
                     autosize
                     minRows={2}
+                    value={informations}
+                    onChange={(e) => setInformations(e.currentTarget.value)}
                 />
             </div>
 

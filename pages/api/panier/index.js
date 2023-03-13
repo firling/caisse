@@ -36,7 +36,7 @@ async function handlePOST(res, req) {
             dishId: data.dishId,
             quantity: data.quantity,
             total: data.quantity * data.dishPrice,
-            information: data.information
+            informations: data.informations
         }
     })
 
