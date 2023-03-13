@@ -54,31 +54,3 @@ export default function Home() {
     </div>
   )
 }
-
-
-// export const getServerSideProps = async (ctx) => {
-//   const session = await getServerSession(ctx.req, ctx.res, authOptions)
-
-//   var categories = []
-
-//   if (session.user?.selectedResto) {
-//     categories = await prisma.category.findMany({
-//       where: {restoId: session.user?.selectedResto.id},
-//       select: {
-//         id: true,
-//         name: true,
-//         color: true,
-//         type: true
-//       }
-//     })
-//   }
-
-//   const data = await fetch(`${process.env.NEXTAUTH_URL}/api/resto/category`).then(res => res.json())
-
-//   return { 
-//     props: {
-//       user: session.user,
-//       categories,
-//     }
-//   }
-// }

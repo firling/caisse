@@ -1,18 +1,27 @@
 import CreateDishModal from '@/components/modal/CreateDishModal';
-import prisma from '@/lib/prisma';
-import { getServerSession } from 'next-auth'
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import colorVariants from '../../utils/colors';
 
-export default function Category({user, category, dishes}) {
-    const [dishOpened, setDishOpened] = useState(false);
+export default function Category() {
+    const { data: session, status } = useSession()
     const router = useRouter()
 
-    const cards = dishes.map((elt, i) => (
+    const [dishOpened, setDishOpened] = useState(false);
+    const [category, setCategory] = useState(null);
+
+    useEffect(() => {
+        fetch(`/api/resto/category/${router.query.id}`)
+            .then(res => res.json())
+            .then(setCategory)
+    }, [status])
+
+    if (!category) return <>Loading...</>;
+
+    const cards = category.dishes.map((elt, i) => (
         <div 
             key={i} 
             className="flex flex-wrap justify-center gap-2"
@@ -40,39 +49,7 @@ export default function Category({user, category, dishes}) {
                 </a>
                 {cards}
             </div>
-            <CreateDishModal opened={dishOpened} onClose={() => setDishOpened(false)} restoId={user?.selectedResto.id} categoryId={category.id} />
+            <CreateDishModal opened={dishOpened} onClose={() => setDishOpened(false)} restoId={session.user?.selectedResto.id} categoryId={category.id} />
         </div>
     )
-}
-
-
-export const getServerSideProps = async (ctx) => {
-    const session = await getServerSession(ctx.req, ctx.res, authOptions)
-
-    const category = await prisma.category.findUnique({
-        where: {id: ctx.query.id},
-        select: {
-            id: true,
-            name: true,
-            color: true,
-            type: true
-        }
-    })
-
-    const dishes = await prisma.dish.findMany({
-        where: {categoryId: category.id},
-        select: {
-            id: true,
-            name: true,
-            image: true,
-        }
-    })
-
-    return { 
-        props: {
-            user: session.user,
-            category,
-            dishes,
-        }
-    }
 }

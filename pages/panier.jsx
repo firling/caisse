@@ -1,12 +1,21 @@
 import LignePanier from '@/components/LignePanier';
-import prisma from '@/lib/prisma';
-import { getServerSession } from 'next-auth'
-import Image from 'next/image';
-import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
-export default function Panier({user, lignePanier}) {
+export default function Panier({}) {
+    const { data: session, status } = useSession()
+    
     const [total, setTotal] = useState(0);
+
+    const [lignePanier, setLignePanier] = useState([]);
+
+    useEffect(() => {
+        if (session?.user?.selectedResto) {
+            fetch(`/api/panier?userId=${session.user.id}`)
+                .then(res => res.json())
+                .then(setLignePanier)
+        }
+    }, [status])
 
     useEffect(() => {
         setTotal(lignePanier.reduce((total, ligne) => total + ligne.total, 0))
@@ -32,51 +41,4 @@ export default function Panier({user, lignePanier}) {
             </div>
         </div>
     )
-}
-
-
-export const getServerSideProps = async (ctx) => {
-    const session = await getServerSession(ctx.req, ctx.res, authOptions)
-
-    var panier = await prisma.panier.findFirst({
-        where: {
-            userId: session.user.id,
-            active: true
-        },
-    })
-
-    if (!panier) {
-        panier = await prisma.panier.create({
-            data: {
-                userId: session.user.id,
-                active: true
-            }
-        })
-    }
-
-    const lignePanier = await prisma.lignePanier.findMany({
-        where: {
-            panierId: panier.id
-        },
-        select: {
-            id: true,
-            quantity: true,
-            total: true,
-            informations: true,
-            dish: {
-                select: {
-                    id: true,
-                    name: true,
-                    image: true,
-                }
-            }
-        }
-    })
-
-    return { 
-        props: {
-            user: session.user,
-            lignePanier,
-        }
-    }
 }

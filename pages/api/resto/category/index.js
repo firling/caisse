@@ -1,6 +1,4 @@
-import prisma from "../../../lib/prisma";
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { getServerSession } from "next-auth/next"
+import prisma from "../../../../lib/prisma";
 
 export default async function handle(req, res) {
   if (req.method === "POST") {
@@ -18,7 +16,7 @@ async function handleGET(req, res) {
   const { restoId } = req.query
 
   const categories = await prisma.category.findMany({
-    where: {restoId},
+    where: { restoId },
     select: {
       id: true,
       name: true,

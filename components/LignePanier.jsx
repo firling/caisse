@@ -21,6 +21,7 @@ export default function LignePanier({elt}) {
                 <div className="flex-shrink-0">
                     <Image 
                         className="w-8 h-8 rounded-full"
+                        alt='ligne panier image'
                         height={200}
                         width={200}
                         src={elt.dish.image}

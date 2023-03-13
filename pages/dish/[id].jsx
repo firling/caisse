@@ -1,15 +1,24 @@
-import prisma from '@/lib/prisma';
 import { Textarea } from '@mantine/core';
 import { useCounter } from '@mantine/hooks';
-import { getServerSession } from 'next-auth'
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { authOptions } from 'pages/api/auth/[...nextauth]'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function Dish({user, dish}) {
+export default function Dish() {
+    const { data: session, status } = useSession()
     const router = useRouter();
+
     const [count, handlers] = useCounter(1, { min: 1 });
     const [informations, setInformations] = useState("");
+    const [dish, setDish] = useState(null);
+
+    useEffect(() => {
+        if (session?.user?.selectedResto) {
+          fetch(`/api/resto/dish?id=${router.query.id}`)
+            .then(res => res.json())
+            .then(setDish)
+        }
+    }, [status])
 
     const addToPanier = () => {
         fetch('/api/panier/', {
@@ -17,7 +26,7 @@ export default function Dish({user, dish}) {
 
             body: JSON.stringify({
                 data: {
-                    userId: user.id,
+                    userId: session?.user.id,
                     dishId: dish.id,
                     quantity: count,
                     dishPrice: dish.price,
@@ -35,6 +44,8 @@ export default function Dish({user, dish}) {
             router.back();
         });
     }
+
+    if (!dish) return <>Loading...</>;
 
     return (
         <div className="relative container mx-auto pb-36">
@@ -94,27 +105,4 @@ export default function Dish({user, dish}) {
             </div>
         </div>
     )
-}
-
-
-export const getServerSideProps = async (ctx) => {
-    const session = await getServerSession(ctx.req, ctx.res, authOptions)
-
-    const dish = await prisma.dish.findUnique({
-        where: {id: ctx.query.id},
-        select: {
-            id: true,
-            name: true,
-            price: true,
-            image: true,
-            description: true,
-        }
-    })
-
-    return { 
-        props: {
-            user: session.user,
-            dish,
-        }
-    }
 }
