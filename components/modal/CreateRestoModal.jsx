@@ -1,9 +1,7 @@
 import { Button, Group, Modal, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useRouter } from 'next/router';
 
 export default function CreateRestoModal({opened, onClose, userId, refresh}) {
-    const router = useRouter()
 
     const form = useForm({
       initialValues: {
@@ -31,7 +29,7 @@ export default function CreateRestoModal({opened, onClose, userId, refresh}) {
         })
         .then(response => response.json())
         .then(json => {
-            router.replace(router.asPath);
+            refresh()
             onClose()
         });
     }

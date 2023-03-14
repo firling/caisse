@@ -13,10 +13,14 @@ export default function Category() {
     const [dishOpened, setDishOpened] = useState(false);
     const [category, setCategory] = useState(null);
 
-    useEffect(() => {
+    const refresh = () => {
         fetch(`/api/resto/category/${router.query.id}`)
             .then(res => res.json())
             .then(setCategory)
+    }
+
+    useEffect(() => {
+        refresh()
     }, [status])
 
     if (!category) return <>Loading...</>;
@@ -49,7 +53,13 @@ export default function Category() {
                 </a>
                 {cards}
             </div>
-            <CreateDishModal opened={dishOpened} onClose={() => setDishOpened(false)} restoId={session.user?.selectedResto.id} categoryId={category.id} />
+            <CreateDishModal 
+                opened={dishOpened} 
+                onClose={() => setDishOpened(false)} 
+                refresh={refresh}
+                restoId={session.user?.selectedResto.id} 
+                categoryId={category.id} 
+            />
         </div>
     )
 }

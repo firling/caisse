@@ -1,8 +1,48 @@
 import { useCounter } from '@mantine/hooks';
+import { IconTrash } from '@tabler/icons-react';
 import Image from 'next/image';
 
-export default function LignePanier({elt}) {
+export default function LignePanier({elt, refresh}) {
     const [count, handlers] = useCounter(elt.quantity, { min: 1 });
+
+    const deleteLigne = () => {
+        fetch(`/api/panier/ligne/${elt.id}`, {
+            method: "DELETE",
+     
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then(res => res.json)
+          .then(() => refresh())
+    }
+
+    const changeLine = (value) => {
+        fetch(`/api/panier/ligne/${elt.id}`, {
+            method: "PUT",
+
+            body: JSON.stringify({
+                value
+            }),
+     
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then(res => res.json)
+          .then(() => refresh())
+    }
+
+    const decrement = () => {
+        if (count === 1) {
+            return deleteLigne()
+        } 
+        changeLine(count - 1)
+        handlers.decrement()
+    }
+
+    const increment = () => {
+        changeLine(count + 1)
+        handlers.increment()
+    }
 
     return (
         <li className="py-2">
@@ -33,10 +73,11 @@ export default function LignePanier({elt}) {
                 <div className='flex-1 bg-white'>
                     <div className="flex flex-row h-10 w-32 rounded-lg relative bg-transparent mt-1">
                         <button 
-                            onClick={handlers.decrement} 
-                            disabled={count === 1} 
-                            className={`bg-gray-200 ${count === 1 ? "text-gray-400" : "text-gray-800"} hover:text-gray-900 hover:bg-gray-300 h-full w-20 rounded-l-full cursor-pointer outline-none`}>
-                            <span className="m-auto text-2xl font-thin">−</span>
+                            onClick={decrement} 
+                            className={`bg-gray-200 text-gray-800 hover:text-gray-900 hover:bg-gray-300 h-full w-20 rounded-l-full cursor-pointer outline-none`}>
+                            <span className="m-auto text-2xl font-thin">
+                                {count === 1 ? <IconTrash className='ml-2' size={20} /> : "−"}
+                            </span>
                         </button>
                         <input 
                             type="number" 
@@ -44,7 +85,7 @@ export default function LignePanier({elt}) {
                             name="custom-input-number" 
                             value={count} 
                         />
-                        <button onClick={handlers.increment}  className="bg-gray-200 text-gray-800 hover:text-gray-900 hover:bg-gray-300 h-full w-20 rounded-r-full cursor-pointer">
+                        <button onClick={increment} className="bg-gray-200 text-gray-800 hover:text-gray-900 hover:bg-gray-300 h-full w-20 rounded-r-full cursor-pointer">
                             <span className="m-auto text-2xl font-thin">+</span>
                         </button>
                     </div>

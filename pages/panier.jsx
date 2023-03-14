@@ -9,11 +9,15 @@ export default function Panier({}) {
 
     const [lignePanier, setLignePanier] = useState([]);
 
+    const refresh = () => {
+        fetch(`/api/panier?userId=${session.user.id}`)
+            .then(res => res.json())
+            .then(setLignePanier)
+    }
+
     useEffect(() => {
         if (session?.user?.selectedResto) {
-            fetch(`/api/panier?userId=${session.user.id}`)
-                .then(res => res.json())
-                .then(setLignePanier)
+            refresh()
         }
     }, [status])
 
@@ -27,7 +31,7 @@ export default function Panier({}) {
             <div className='p-4 bg-white'>
                 <ul className="max-w-md mx-auto divide-y divide-gray-200">
                     {lignePanier.map((elt, i) => (
-                        <LignePanier key={i} elt={elt}/>
+                        <LignePanier key={i} elt={elt} refresh={refresh} />
                     ))}
                 </ul>
             </div>

@@ -1,10 +1,8 @@
 import { Button, FileInput, Group, Modal, NumberInput, Text, Textarea, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-export default function CreateDishModal({opened, onClose, restoId, categoryId}) {
-    const router = useRouter()
+export default function CreateDishModal({opened, onClose, refresh, restoId, categoryId}) {
 
     const [img, setImg] = useState('')    
 
@@ -59,7 +57,7 @@ export default function CreateDishModal({opened, onClose, restoId, categoryId}) 
         })
         .then(response => response.json())
         .then(json => {
-            router.replace(router.asPath);
+            refresh()
             onClose()
         });
     }

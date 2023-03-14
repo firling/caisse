@@ -2,7 +2,7 @@ import CreateRestoModal from '@/components/modal/CreateRestoModal';
 import { Button } from '@mantine/core';
 import { useState } from 'react'
 
-export default function NoResto({user}) {
+export default function NoResto({user, refresh}) {
   const [createModalOpened, setCreateModalOpened] = useState(false);
 
     return (
@@ -21,7 +21,8 @@ export default function NoResto({user}) {
 
         <CreateRestoModal 
           opened={createModalOpened} 
-          onClose={() => setCreateModalOpened(false)} refresh={() => console.log("refresh")} 
+          onClose={() => setCreateModalOpened(false)}
+          refresh={refresh} 
           userId={user?.id}
         />
       </div>

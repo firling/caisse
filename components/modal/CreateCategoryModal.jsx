@@ -1,9 +1,7 @@
 import { Button, Group, Modal, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useRouter } from 'next/router';
 
-export default function CreateCategoryModal({opened, onClose, restoId, colorVariants}) {
-    const router = useRouter()
+export default function CreateCategoryModal({opened, onClose, refresh, restoId, colorVariants}) {
 
     const form = useForm({
       initialValues: {
@@ -35,7 +33,7 @@ export default function CreateCategoryModal({opened, onClose, restoId, colorVari
         })
         .then(response => response.json())
         .then(json => {
-            router.replace(router.asPath);
+            refresh()
             onClose()
         });
     }

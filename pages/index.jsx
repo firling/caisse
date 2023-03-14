@@ -14,16 +14,20 @@ export default function Home() {
 
   const router = useRouter()
 
+  const refresh = () => {
+    fetch(`/api/resto/category?restoId=${session.user.selectedResto.id}`)
+      .then(res => res.json())
+      .then(setCategories)
+  }
+
   useEffect(() => {
     if (session?.user?.selectedResto) {
-      fetch(`/api/resto/category?restoId=${session.user.selectedResto.id}`)
-        .then(res => res.json())
-        .then(setCategories)
+      refresh()
     }
   }, [status])
 
   if (!session?.user?.selectedResto) {
-    return <NoResto user={session?.user} />
+    return <NoResto refresh={refresh} user={session?.user} />
   }
 
   const cards = categories.map((elt, i) => (
@@ -47,7 +51,8 @@ export default function Home() {
       </div>
       <CreateCategoryModal 
           opened={createCatOpened} 
-          onClose={() => setCreateCatOpened(false)} refresh={() => console.log("refresh")} 
+          onClose={() => setCreateCatOpened(false)} 
+          refresh={refresh} 
           restoId={session.user?.selectedResto?.id}
           colorVariants={colorVariants}
       />
