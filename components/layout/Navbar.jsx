@@ -17,7 +17,7 @@ export default function Navbar() {
 			Icon: IconBasket,
 		},
 		{
-			link: "#",
+			link: "/command",
 			label: "Commande",
 			Icon: IconNotes,
 		},

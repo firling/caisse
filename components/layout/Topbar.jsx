@@ -1,8 +1,10 @@
 import { UnstyledButton } from "@mantine/core";
 import { IconChevronLeft } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 export default function Topbar({title}) {
+    const { data: session, status } = useSession()
 	const router = useRouter()
 
     const mainRoutes = [
@@ -19,7 +21,7 @@ export default function Topbar({title}) {
 
             <nav className="nav font-semibold text-lg">
                 <h2 className="p-4">
-                    {title}
+                    {session?.user?.selectedResto ? session?.user?.selectedResto?.name : "Caisse"}
                 </h2>
             </nav>
 

@@ -84,6 +84,7 @@ export default function LignePanier({elt, refresh}) {
                             className="outline-none focus:outline-none text-center w-full bg-gray-200 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-800  outline-none" 
                             name="custom-input-number" 
                             value={count} 
+                            onClick={() => null}
                         />
                         <button onClick={increment} className="bg-gray-200 text-gray-800 hover:text-gray-900 hover:bg-gray-300 h-full w-20 rounded-r-full cursor-pointer">
                             <span className="m-auto text-2xl font-thin">+</span>

@@ -21,37 +21,44 @@ async function handleGET(req, res) {
         userId: userId,
         active: true
     },
-  })
-
-  if (!panier) {
-      panier = await prisma.panier.create({
-          data: {
-              userId: userId,
-              active: true
-          }
-      })
-  }
-
-  const lignePanier = await prisma.lignePanier.findMany({
-    where: {
-        panierId: panier.id
-    },
-    select: {
-        id: true,
-        quantity: true,
-        total: true,
-        informations: true,
-        dish: {
-            select: {
-                id: true,
-                name: true,
-                image: true,
+    include: {
+        LignePanier: {
+            include: {
+                dish: true
             }
         }
     }
-})
+  })
 
-  res.json(lignePanier)
+    if (!panier) {
+        panier = await prisma.panier.create({
+            data: {
+                userId: userId,
+                active: true
+            },
+        })
+    }
+
+    const lignePanier = await prisma.lignePanier.findMany({
+        where: {
+            panierId: panier.id
+        },
+        select: {
+            id: true,
+            quantity: true,
+            total: true,
+            informations: true,
+            dish: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                }
+            }
+        }
+    })
+
+  res.json(panier)
 }
 
 

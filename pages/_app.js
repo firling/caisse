@@ -51,7 +51,7 @@ export default function App({ Component, pageProps: {session, ...pageProps}, ...
         }}
       >
         <div className="flex flex-col w-full h-screen bg-slate-100">
-          <Topbar title={pageProps.user?.selectedResto ? pageProps.user?.selectedResto.name : "Caisse"}/>
+          <Topbar />
           <Component {...pageProps} />
           <Navbar />
         </div>
