@@ -61,7 +61,7 @@ export default function Panier({}) {
             
 
             <div className='p-4 inset-x-0 bottom-14 fixed bg-white'>
-                <button onClick={confirmCommand} class="w-full bg-slate-900 hover:bg-slate-700 text-white font-bold py-4 px-4 rounded">
+                <button onClick={confirmCommand} className="w-full bg-slate-900 hover:bg-slate-700 text-white font-bold py-4 px-4 rounded">
                     Valider la commande (total : {total}€)
                 </button>
             </div>
