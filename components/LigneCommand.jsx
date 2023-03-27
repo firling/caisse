@@ -2,7 +2,7 @@ import { Paper, Title } from "@mantine/core"
 import dayjs from "dayjs"
 import "dayjs/locale/fr"
 
-export default function LigneCommand({elt}) {
+export default function LigneCommand({elt, onClick}) {
     const backgroundColor = {
         notPaid: "bg-stone-300",
         paid: "bg-orange-300",
@@ -25,6 +25,7 @@ export default function LigneCommand({elt}) {
     return (
         <Paper mt="sm" p="0" shadow="md" 
             className={`${backgroundColor[elt.state]} flex flex-row overflow-hidden`}
+            onClick={onClick}
         >
             <div className="text-white bg-slate-900 px-2 flex items-center"><Title order={3}>{elt.id}</Title></div>
             <div className="px-4 py-2 w-full flex flex-col">

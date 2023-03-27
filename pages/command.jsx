@@ -1,4 +1,5 @@
 import LigneCommand from '@/components/LigneCommand';
+import UpdateLigneCommandModal from '@/components/modal/UpdateLigneCommand';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
@@ -7,6 +8,9 @@ export default function Command({}) {
 
     const [commands, setCommands] = useState([])
     const [filter, setFilter] = useState(["all"])
+
+    const [updateLigneOpened, setUpdateLigneOpened] = useState(false)
+    const [currentLigne, setCurrentLigne] = useState({})
 
     const refresh = () => {
         fetch(`/api/command/all?restoId=${session?.user?.selectedResto.id}`)
@@ -35,6 +39,11 @@ export default function Command({}) {
         return commands.filter(elt => filter.includes(elt.state))
     }
 
+    const clickCommand = (elt) => {
+        setCurrentLigne(elt)
+        setUpdateLigneOpened(true)
+    }
+
     return (
         <div className="relative container mx-auto pb-16 px-4">
             <div className='mt-2'>
@@ -45,8 +54,14 @@ export default function Command({}) {
                 <span onClick={() => clickFilter("all")} className={`cursor-pointer bg-white text-black text-xs mr-2 px-2.5 py-0.5 rounded border-black ${filter.includes("all") && "border font-semibold"}`}>Toutes</span>
             </div>
             {getCommands().map((elt, i) => (
-                <LigneCommand key={i} elt={elt} />
+                <LigneCommand key={i} elt={elt} onClick={() => clickCommand(elt)} />
             ))}
+
+            <UpdateLigneCommandModal 
+                opened={updateLigneOpened} 
+                onClose={() => setUpdateLigneOpened(false)}
+                ligne={currentLigne}
+            />
 
         </div>
     )
