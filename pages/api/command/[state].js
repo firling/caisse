@@ -41,6 +41,11 @@ async function handleGet(req, res) {
     const {state, restoId} = req.query
 
     const command = await prisma.command.findMany({
+        orderBy: [
+          {
+            id: 'desc',
+          },
+        ],
         where: {
             restoId
         },

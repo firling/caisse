@@ -53,9 +53,11 @@ export default function Command({}) {
                 <span onClick={() => clickFilter("given")} className={`cursor-pointer bg-sky-300 text-sky-900 text-xs mr-2 px-2.5 py-0.5 rounded border-sky-900 ${filter.includes("given") && "border font-semibold"}`}>Livrée</span>
                 <span onClick={() => clickFilter("all")} className={`cursor-pointer bg-white text-black text-xs mr-2 px-2.5 py-0.5 rounded border-black ${filter.includes("all") && "border font-semibold"}`}>Toutes</span>
             </div>
-            {getCommands().map((elt, i) => (
-                <LigneCommand key={i} elt={elt} onClick={() => clickCommand(elt)} />
-            ))}
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'>
+                {getCommands().map((elt, i) => (
+                    <LigneCommand key={i} elt={elt} onClick={() => clickCommand(elt)} />
+                ))}
+            </div>
 
             <UpdateLigneCommandModal 
                 opened={updateLigneOpened} 
