@@ -5,6 +5,8 @@ export default async function handle(req, res) {
     await handlePost(req, res);
   } else if (req.method === "GET") {
     await handleGet(req, res)
+  } else if (req.method === "PUT") {
+    await handlePut(req, res)
   } else {
     throw new Error(
       `The HTTP ${req.method} method is not supported at this route.`,
@@ -52,6 +54,25 @@ async function handleGet(req, res) {
                     }
                 }
             }
+        }
+    })
+
+    res.json(command)
+}
+
+
+
+
+async function handlePut(req, res) {
+    const {state} = req.query
+    const {data} = req.body
+
+    const command = await prisma.command.update({
+        where: {
+            id: data.id
+        },
+        data: {
+            state
         }
     })
 

@@ -61,6 +61,7 @@ export default function Command({}) {
                 opened={updateLigneOpened} 
                 onClose={() => setUpdateLigneOpened(false)}
                 ligne={currentLigne}
+                refresh={refresh}
             />
 
         </div>
