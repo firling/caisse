@@ -3,6 +3,8 @@ import prisma from "../../../lib/prisma";
 export default async function handle(req, res) {
   if (req.method === "POST") {
     await handlePOST(res, req);
+  } else if (req.method === "GET") {
+    await handleGET(res, req);
   } else {
     throw new Error(
       `The HTTP ${req.method} method is not supported at this route.`,
@@ -38,4 +40,19 @@ async function handlePOST(res, req) {
     })
 
     res.json(resto);
+}
+
+async function handleGET(res, req) {
+    const {userId} = req.query
+
+    const restos = await prisma.userResto.findMany({
+        where: {
+          userId 
+        },
+        include: {
+            resto: true
+        }
+    })
+
+    res.json(restos);
 }

@@ -26,6 +26,7 @@ export default function Panier({}) {
     }, [panier])
 
     const confirmCommand = () => {
+        if (total === 0) return;
         fetch('/api/command/notPaid', {
             method: "POST",
 
