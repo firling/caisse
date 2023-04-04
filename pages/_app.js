@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react"
 import Head from 'next/head'
 import Navbar from '@/components/layout/Navbar'
 import Topbar from '@/components/layout/Topbar'
+import { Notifications } from '@mantine/notifications'
 
 export default function App({ Component, pageProps: {session, ...pageProps}, ...appProps }) {
   const noLayout = ['/auth/signin'];
@@ -26,6 +27,7 @@ export default function App({ Component, pageProps: {session, ...pageProps}, ...
             colorScheme: 'light',
           }}
         >
+          <Notifications />
           <Component {...pageProps} />
         </MantineProvider>
       </SessionProvider>
@@ -50,6 +52,7 @@ export default function App({ Component, pageProps: {session, ...pageProps}, ...
           colorScheme: 'light',
         }}
       >
+        <Notifications />
         <div className="flex flex-col w-full h-screen bg-slate-100">
           <Topbar />
           <Component {...pageProps} />

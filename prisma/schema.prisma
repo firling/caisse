@@ -54,8 +54,7 @@ model User {
   accounts        Account[]
   sessions        Session[]
   restos          UserResto[]
-  referrers       Invitation[] @relation("referrer")
-  refereds        Invitation[] @relation("referred")
+  referreds        Invitation[] @relation("referred")
   Panier          Panier[]
   selectedRestoId String?
 
@@ -79,11 +78,9 @@ model VerificationToken {
 model Invitation {
   id         String @id @default(cuid())
   status     String
-  referrerId String
   referredId String
   restoId    String
 
-  referrer User  @relation("referrer", fields: [referrerId], references: [id])
   referred User  @relation("referred", fields: [referredId], references: [id])
   resto    Resto @relation(fields: [restoId], references: [id])
 
