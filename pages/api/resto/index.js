@@ -16,12 +16,6 @@ export default async function handle(req, res) {
 async function handlePOST(res, req) {
     const {userId, data} = req.body
 
-    // const user = await prisma.user.findUnique({
-    //     where: {
-    //         id: userId
-    //     }
-    // })
-
     const resto = await prisma.resto.create({
         data: {
             ...data,

@@ -67,6 +67,15 @@ export const authOptions = {
             id: true, name: true
           }
         });
+
+        const role = await prisma.userResto.findFirst({
+          where: {
+            userId: userData.id, 
+            restoId: userData.selectedRestoId
+          }
+        })
+
+        selectedResto.role = role.role
       }
 
       return {
