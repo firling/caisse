@@ -1,7 +1,10 @@
 import LigneCommand from '@/components/LigneCommand';
 import UpdateLigneCommandModal from '@/components/modal/UpdateLigneCommand';
+import io from "socket.io-client";
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+
+let socket;
 
 export default function Command({}) {
     const { data: session, status } = useSession()
@@ -11,6 +14,31 @@ export default function Command({}) {
 
     const [updateLigneOpened, setUpdateLigneOpened] = useState(false)
     const [currentLigne, setCurrentLigne] = useState({})
+
+    const socketInitializer = async () => {
+        await fetch('/api/socket')
+        // connect to socket server
+        // socket = SocketIOClient.connect("", {
+        //   path: "/api/socket",
+        // });
+
+        socket = io()
+    
+        // log socket connection
+        socket.on("connect", () => {
+          console.log("SOCKET CONNECTED!", socket.id);
+        });
+    
+        // update chat on new message dispatched
+        socket.on("fion", () => {
+            console.log("fion")
+        });
+    };
+
+    useEffect(() => {
+        socketInitializer()
+        if (socket) return () => socket.disconnect();
+    }, []);
 
     const refresh = () => {
         fetch(`/api/command/all?restoId=${session?.user?.selectedResto.id}`)

@@ -11,8 +11,6 @@ export async function middleware(request) {
     secret: process.env.NEXTAUTH_SECRET
   })
 
-  console.log(token)
-
   if (!token) {
     return NextResponse.redirect(new URL(`/auth/signin?callbackUrl=${process.env.NEXTAUTH_URL}`, request.url))
   }
